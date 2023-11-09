@@ -1,0 +1,9 @@
+namespace: sample
+commonLabels:
+  overlays-label: bar
+
+bases:
+- ../../base
+
+patchesStrategicMerge:
+- deployment.yaml

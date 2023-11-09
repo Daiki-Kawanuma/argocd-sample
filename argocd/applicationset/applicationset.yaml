@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: nginx
+  namespace: sample
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingKey=error"]
+  generators:
+  - git:
+      repoURL: https://github.com/Daiki-Kawanuma/argocd-sample.git
+      revision: main
+      directories:
+      - path: app/overlays/*
+  syncPolicy:
+    applicationsSync: create-only
+    preserveResourcesOnDeletion: true
+  template:
+    metadata:
+      name: '{{ .path.basename }}'
+      namespace: sample
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/Daiki-Kawanuma/argocd-sample.git
+        targetRevision: feat_init
+        path: '{{.path.path}}'
+        directory:
+          jsonnet: {}
+          recurse: false
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: sample
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=false
+        - ApplyOutOfSyncOnly=true
+        - Validate=false
+        - Delete=false
+        - FailOnSharedResource=true
+      ignoreDifferences:
+      - group: apps
+        kind: Deployment
+        jsonPointers:
+        - /spec/template/spec/containers/0/image
+ 

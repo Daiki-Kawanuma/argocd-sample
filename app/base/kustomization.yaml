@@ -1,0 +1,5 @@
+commonLabels:
+  base-label: foo
+
+resources:
+- deployment.yaml
