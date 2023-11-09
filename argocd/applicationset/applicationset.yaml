@@ -23,7 +23,7 @@ spec:
       project: default
       source:
         repoURL: https://github.com/Daiki-Kawanuma/argocd-sample.git
-        targetRevision: feat_init
+        targetRevision: main
         path: '{{.path.path}}'
         directory:
           jsonnet: {}
